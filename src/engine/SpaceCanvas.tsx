@@ -148,7 +148,7 @@ export function SpaceCanvas() {
 
   const spaceId = useEngineStore((state) => state.spaceId)
   const transition = useEngineStore((state) => state.transition)
-  const overlayHudOpen = useEngineStore((state) => state.overlayHudOpen)
+  const preventPointerLock = useEngineStore((state) => state.preventPointerLock)
   const startTransition = useEngineStore((state) => state.startTransition)
   const setTransitionPhase = useEngineStore((state) => state.setTransitionPhase)
 
@@ -156,10 +156,10 @@ export function SpaceCanvas() {
   const baseSpaceFov = spaceRegistry[spaceId].profile.camera?.fov ?? DEFAULT_FOV
 
   useEffect(() => {
-    if ((isTransitioning || overlayHudOpen) && document.pointerLockElement) {
+    if ((isTransitioning || preventPointerLock) && document.pointerLockElement) {
       void document.exitPointerLock()
     }
-  }, [isTransitioning, overlayHudOpen])
+  }, [isTransitioning, preventPointerLock])
 
   useEffect(() => {
     if (transition.phase === 'navigate' && transition.pendingPath) {
@@ -195,7 +195,7 @@ export function SpaceCanvas() {
         <SpaceManager navigate={handleNavigate} />
         <InteractionSystem />
         <CameraTransitionRig />
-        <PointerLockControls enabled={!isTransitioning && !overlayHudOpen} makeDefault />
+        {!isTransitioning && !preventPointerLock ? <PointerLockControls makeDefault /> : null}
       </Suspense>
     </Canvas>
   )

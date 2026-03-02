@@ -17,6 +17,8 @@ interface SpaceTransition {
   focusPoint: [number, number, number] | null
 }
 
+type PointerLockGuardSource = 'library' | 'gallery' | 'chat'
+
 interface EngineStore {
   spaceId: SpaceId
   setSpaceId: (spaceId: SpaceId) => void
@@ -34,8 +36,15 @@ interface EngineStore {
   setChatOpen: (open: boolean) => void
   audioMuted: boolean
   setAudioMuted: (muted: boolean) => void
+  overlayHudBySource: {
+    library: boolean
+    gallery: boolean
+  }
   overlayHudOpen: boolean
-  setOverlayHudOpen: (open: boolean) => void
+  setOverlayHudOpen: (source: 'library' | 'gallery', open: boolean) => void
+  pointerLockGuardBySource: Record<PointerLockGuardSource, boolean>
+  preventPointerLock: boolean
+  setPointerLockGuard: (source: PointerLockGuardSource, blocked: boolean) => void
 }
 
 export const useEngineStore = create<EngineStore>((set, get) => ({
@@ -45,7 +54,18 @@ export const useEngineStore = create<EngineStore>((set, get) => ({
       spaceId,
       focusedId: null,
       interactables: new Map(),
+      chatOpen: false,
+      overlayHudBySource: {
+        library: false,
+        gallery: false,
+      },
       overlayHudOpen: false,
+      pointerLockGuardBySource: {
+        library: false,
+        gallery: false,
+        chat: false,
+      },
+      preventPointerLock: false,
     }),
   focusedId: null,
   setFocusedId: (id) => set({ focusedId: id }),
@@ -82,6 +102,12 @@ export const useEngineStore = create<EngineStore>((set, get) => ({
     set({
       focusedId: null,
       chatOpen: false,
+      pointerLockGuardBySource: {
+        library: false,
+        gallery: false,
+        chat: false,
+      },
+      preventPointerLock: false,
       transition: {
         phase: 'zoom-in',
         pendingPath,
@@ -104,9 +130,55 @@ export const useEngineStore = create<EngineStore>((set, get) => ({
       },
     }),
   chatOpen: false,
-  setChatOpen: (open) => set({ chatOpen: open }),
+  setChatOpen: (open) =>
+    set((state) => {
+      const nextGuards = {
+        ...state.pointerLockGuardBySource,
+        chat: open,
+      }
+
+      return {
+        chatOpen: open,
+        pointerLockGuardBySource: nextGuards,
+        preventPointerLock: nextGuards.library || nextGuards.gallery || nextGuards.chat,
+      }
+    }),
   audioMuted: false,
   setAudioMuted: (muted) => set({ audioMuted: muted }),
+  overlayHudBySource: {
+    library: false,
+    gallery: false,
+  },
   overlayHudOpen: false,
-  setOverlayHudOpen: (open) => set({ overlayHudOpen: open }),
+  setOverlayHudOpen: (source, open) =>
+    set((state) => {
+      const nextBySource = {
+        ...state.overlayHudBySource,
+        [source]: open,
+      }
+      const nextOpen = nextBySource.library || nextBySource.gallery
+
+      return {
+        overlayHudBySource: nextBySource,
+        overlayHudOpen: nextOpen,
+      }
+    }),
+  pointerLockGuardBySource: {
+    library: false,
+    gallery: false,
+    chat: false,
+  },
+  preventPointerLock: false,
+  setPointerLockGuard: (source, blocked) =>
+    set((state) => {
+      const nextGuards = {
+        ...state.pointerLockGuardBySource,
+        [source]: blocked,
+      }
+
+      return {
+        pointerLockGuardBySource: nextGuards,
+        preventPointerLock: nextGuards.library || nextGuards.gallery || nextGuards.chat,
+      }
+    }),
 }))

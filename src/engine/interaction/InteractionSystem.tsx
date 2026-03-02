@@ -26,7 +26,7 @@ export function InteractionSystem() {
   const interactables = useEngineStore((state) => state.interactables)
   const focusedId = useEngineStore((state) => state.focusedId)
   const transitionPhase = useEngineStore((state) => state.transition.phase)
-  const overlayHudOpen = useEngineStore((state) => state.overlayHudOpen)
+  const preventPointerLock = useEngineStore((state) => state.preventPointerLock)
   const setFocusedId = useEngineStore((state) => state.setFocusedId)
   const interact = useEngineStore((state) => state.interact)
 
@@ -34,7 +34,7 @@ export function InteractionSystem() {
   const screenCenter = useMemo(() => new Vector2(0, 0), [])
 
   useFrame(() => {
-    if (transitionPhase !== 'idle' || overlayHudOpen) {
+    if (transitionPhase !== 'idle' || preventPointerLock) {
       if (focusedId !== null) {
         setFocusedId(null)
       }
@@ -72,7 +72,7 @@ export function InteractionSystem() {
         return
       }
 
-      if (transitionPhase !== 'idle' || overlayHudOpen) {
+      if (transitionPhase !== 'idle' || preventPointerLock) {
         return
       }
 
@@ -84,7 +84,7 @@ export function InteractionSystem() {
     return () => {
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [interact, overlayHudOpen, transitionPhase])
+  }, [interact, preventPointerLock, transitionPhase])
 
   useEffect(() => {
     return () => {

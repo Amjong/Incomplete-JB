@@ -5,11 +5,11 @@ export const roomSpace: SpaceDefinition = {
   id: 'room',
   title: 'Room',
   profile: {
-    background: '#171116',
+    background: '#24160f',
     fog: {
-      color: '#171116',
-      near: 10,
-      far: 32,
+      color: '#2d1b12',
+      near: 5.5,
+      far: 18,
     },
     gravity: [0, -9.81, 0],
     camera: {
@@ -31,16 +31,17 @@ export const roomSpace: SpaceDefinition = {
     },
     postprocessing: {
       bloom: {
-        intensity: 0.45,
+        intensity: 0.3,
+        luminanceThreshold: 0.35,
       },
       vignette: {
-        offset: 0.24,
-        darkness: 0.58,
+        offset: 0.2,
+        darkness: 0.44,
       },
     },
   },
-  spawn: { position: [0, 1.6, 5.2] },
-  controls: { speed: 4.2 },
+  spawn: { position: [0, 1.6, 2.2] },
+  controls: { speed: 1.4 },
   Scene: RoomScene,
 }
 

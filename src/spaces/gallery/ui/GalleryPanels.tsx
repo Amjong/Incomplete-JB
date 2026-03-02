@@ -22,6 +22,7 @@ function TabButton({
 export function GalleryPanels() {
   const spaceId = useEngineStore((state) => state.spaceId)
   const setOverlayHudOpen = useEngineStore((state) => state.setOverlayHudOpen)
+  const setPointerLockGuard = useEngineStore((state) => state.setPointerLockGuard)
 
   const loadSeed = useGalleryStore((state) => state.loadSeed)
   const panelOpen = useGalleryStore((state) => state.panelOpen)
@@ -50,8 +51,12 @@ export function GalleryPanels() {
 
   const hasOverlay = spaceId === 'gallery' && (panelOpen || Boolean(detailItemId))
   useEffect(() => {
-    setOverlayHudOpen(hasOverlay)
+    setOverlayHudOpen('gallery', hasOverlay)
   }, [hasOverlay, setOverlayHudOpen])
+
+  useEffect(() => {
+    setPointerLockGuard('gallery', hasOverlay)
+  }, [hasOverlay, setPointerLockGuard])
 
   useEffect(() => {
     if (spaceId !== 'gallery') {

@@ -10,6 +10,8 @@ interface SpaceManagerProps {
   navigate: (path: SpacePath) => void
 }
 
+const MOVEMENT_SPEED_MULTIPLIER = 3
+
 export function SpaceManager({ navigate }: SpaceManagerProps) {
   const spaceId = useEngineStore((state) => state.spaceId)
   const transitionPhase = useEngineStore((state) => state.transition.phase)
@@ -24,7 +26,7 @@ export function SpaceManager({ navigate }: SpaceManagerProps) {
         <PhysicsPlayer
           cameraProfile={definition.profile.camera}
           enabled={transitionPhase === 'idle'}
-          moveSpeed={definition.controls?.speed ?? 4.2}
+          moveSpeed={(definition.controls?.speed ?? 4.2) * MOVEMENT_SPEED_MULTIPLIER}
           spawn={definition.spawn.position}
         />
         <definition.Scene navigate={navigate} openChat={openChat} />
