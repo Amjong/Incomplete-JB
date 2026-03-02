@@ -1,0 +1,23 @@
+{
+  "preset": "identity",
+  "moduleBase": {
+    "tower": { "offset": [0, -4, 0] },
+    "bridge": { "offset": [0, -0.11, 0] },
+    "mezzanine": { "offset": [0, -0.125, 0] },
+    "stairStep": { "offset": [0, -0.12, 0] },
+    "railing": { "offset": [0, -0.85, 0] },
+    "floor": { "offset": [0, 0, 0] },
+    "backWall": { "offset": [0, 0, 0] },
+    "entryWall": { "offset": [0, 0, 0] },
+    "windowWall": { "offset": [0, 0, 0] }
+  },
+  "placements": {
+    "mezzanine.left": {},
+    "mezzanine.right": {},
+    "mezzanine.entry": {},
+    "floor.main": {},
+    "wall.back": {},
+    "wall.entry": {},
+    "window.backlight": {}
+  }
+}

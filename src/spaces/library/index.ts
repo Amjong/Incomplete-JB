@@ -13,10 +13,10 @@ export const librarySpace: SpaceDefinition = {
     },
     gravity: [0, -8.6, 0],
     camera: {
-      fov: 68,
-      movementAcceleration: 12,
-      swayAmount: 0.012,
-      swayFrequency: 8,
+      fov: 72,
+      movementAcceleration: 10,
+      swayAmount: 0.009,
+      swayFrequency: 7,
     },
     sound: {
       enabled: true,
@@ -40,7 +40,7 @@ export const librarySpace: SpaceDefinition = {
       },
     },
   },
-  spawn: { position: [0, 1.6, 8] },
+  spawn: { position: [0, 3.2, 15.2] },
   controls: { speed: 4.0 },
   Scene: LibraryScene,
 }

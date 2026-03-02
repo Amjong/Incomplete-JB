@@ -1,0 +1,51 @@
+[
+  {
+    "id": "engineering",
+    "label": "Engineering",
+    "parentId": null,
+    "keywords": ["architecture", "performance", "typescript", "renderer", "physics", "pipeline"],
+    "tagAliases": ["code", "engine", "dev", "infra"]
+  },
+  {
+    "id": "ai",
+    "label": "AI",
+    "parentId": null,
+    "keywords": ["llm", "agent", "prompt", "embedding", "retrieval", "classification"],
+    "tagAliases": ["model", "ml", "assistant", "reasoning"]
+  },
+  {
+    "id": "product",
+    "label": "Product",
+    "parentId": null,
+    "keywords": ["roadmap", "persona", "retention", "onboarding", "metric", "north star"],
+    "tagAliases": ["pm", "strategy", "user"]
+  },
+  {
+    "id": "design",
+    "label": "Design",
+    "parentId": null,
+    "keywords": ["layout", "typography", "palette", "contrast", "motion", "interaction"],
+    "tagAliases": ["ux", "ui", "visual"]
+  },
+  {
+    "id": "writing",
+    "label": "Writing",
+    "parentId": null,
+    "keywords": ["outline", "draft", "editing", "tone", "summary", "documentation"],
+    "tagAliases": ["doc", "notes", "essay"]
+  },
+  {
+    "id": "personal",
+    "label": "Personal",
+    "parentId": null,
+    "keywords": ["habit", "journal", "reflection", "weekly", "goal", "routine"],
+    "tagAliases": ["life", "memo", "private"]
+  },
+  {
+    "id": "uncategorized",
+    "label": "Uncategorized",
+    "parentId": null,
+    "keywords": [],
+    "tagAliases": []
+  }
+]

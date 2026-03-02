@@ -1,0 +1,835 @@
+{
+  "generatedAt": "2026-03-02T02:05:58.571Z",
+  "categories": [
+    {
+      "id": "engineering",
+      "label": "Engineering",
+      "parentId": null,
+      "keywords": [
+        "architecture",
+        "performance",
+        "typescript",
+        "renderer",
+        "physics",
+        "pipeline"
+      ],
+      "tagAliases": [
+        "code",
+        "engine",
+        "dev",
+        "infra"
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "AI",
+      "parentId": null,
+      "keywords": [
+        "llm",
+        "agent",
+        "prompt",
+        "embedding",
+        "retrieval",
+        "classification"
+      ],
+      "tagAliases": [
+        "model",
+        "ml",
+        "assistant",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "product",
+      "label": "Product",
+      "parentId": null,
+      "keywords": [
+        "roadmap",
+        "persona",
+        "retention",
+        "onboarding",
+        "metric",
+        "north star"
+      ],
+      "tagAliases": [
+        "pm",
+        "strategy",
+        "user"
+      ]
+    },
+    {
+      "id": "design",
+      "label": "Design",
+      "parentId": null,
+      "keywords": [
+        "layout",
+        "typography",
+        "palette",
+        "contrast",
+        "motion",
+        "interaction"
+      ],
+      "tagAliases": [
+        "ux",
+        "ui",
+        "visual"
+      ]
+    },
+    {
+      "id": "writing",
+      "label": "Writing",
+      "parentId": null,
+      "keywords": [
+        "outline",
+        "draft",
+        "editing",
+        "tone",
+        "summary",
+        "documentation"
+      ],
+      "tagAliases": [
+        "doc",
+        "notes",
+        "essay"
+      ]
+    },
+    {
+      "id": "personal",
+      "label": "Personal",
+      "parentId": null,
+      "keywords": [
+        "habit",
+        "journal",
+        "reflection",
+        "weekly",
+        "goal",
+        "routine"
+      ],
+      "tagAliases": [
+        "life",
+        "memo",
+        "private"
+      ]
+    },
+    {
+      "id": "uncategorized",
+      "label": "Uncategorized",
+      "parentId": null,
+      "keywords": [],
+      "tagAliases": []
+    }
+  ],
+  "docs": [
+    {
+      "id": "agent-feedback-loop",
+      "title": "Agent Feedback Loop for Knowledge Classification",
+      "summary": "Notes on rule-first categorization and human correction loops.",
+      "tags": [
+        "assistant",
+        "classification",
+        "model"
+      ],
+      "categoryHint": "ai",
+      "createdAt": "2026-02-12T10:00:00.000Z",
+      "updatedAt": "2026-02-27T18:04:00.000Z",
+      "body": "Start with deterministic rules and track confidence.\nAllow fast correction actions so recategorization can be triggered after edits.\nPersist reasons to make category decisions explainable.",
+      "status": "active"
+    },
+    {
+      "id": "content-taxonomy-seed",
+      "title": "Content Taxonomy Seed",
+      "summary": "Initial root categories for the virtual librarian.",
+      "tags": [
+        "pm",
+        "strategy",
+        "user"
+      ],
+      "createdAt": "2026-02-11T11:20:00.000Z",
+      "updatedAt": "2026-02-26T11:20:00.000Z",
+      "body": "Categories are broad at first and become deeper only when retrieval friction appears.\nTrack uncategorized volume as an operational metric.\nAdd lane growth threshold based on content count.",
+      "status": "active"
+    },
+    {
+      "id": "engine-room-layout",
+      "title": "Engine Room Layout Principles",
+      "summary": "A practical baseline for a modular room-first 3D engine layout.",
+      "tags": [
+        "engine",
+        "architecture",
+        "code"
+      ],
+      "categoryHint": "engineering",
+      "createdAt": "2026-02-10T09:00:00.000Z",
+      "updatedAt": "2026-02-28T12:10:00.000Z",
+      "body": "Use route as the source of active space identity.\nKeep systems independent: interaction, world profile, and player physics.\nPrefer simple authored modules over procedural complexity for early production.",
+      "status": "active"
+    },
+    {
+      "id": "library-navigation-copy",
+      "title": "Library Navigation Copy Draft",
+      "summary": "UX copy options for prompts, controls, and interaction hints.",
+      "tags": [
+        "ux",
+        "writing",
+        "doc"
+      ],
+      "categoryHint": "writing",
+      "createdAt": "2026-02-13T08:30:00.000Z",
+      "updatedAt": "2026-02-25T07:40:00.000Z",
+      "body": "Short labels reduce cognitive load in 3D scenes.\nPrompts should be verb-first and action-specific.\nAvoid modal overload by preserving one primary panel context.",
+      "status": "active"
+    },
+    {
+      "id": "notes-raw-dump",
+      "title": "Raw Dump: Misc Notes",
+      "summary": "Temporary loose notes without clear category ownership.",
+      "tags": [
+        "misc",
+        "scratch"
+      ],
+      "createdAt": "2026-02-17T04:15:00.000Z",
+      "updatedAt": "2026-02-20T06:15:00.000Z",
+      "body": "This file intentionally contains mixed concepts.\nIt should normally fall into uncategorized when no stronger signal appears.",
+      "status": "active"
+    },
+    {
+      "id": "personal-weekly-review",
+      "title": "Weekly Review Template",
+      "summary": "A personal reflection template used to inspect pace and focus.",
+      "tags": [
+        "journal",
+        "habit",
+        "life"
+      ],
+      "categoryHint": "personal",
+      "createdAt": "2026-02-08T21:00:00.000Z",
+      "updatedAt": "2026-02-22T21:00:00.000Z",
+      "body": "Highlight wins, misses, and corrective actions.\nDefine one focus theme for next week.\nArchive completed loops and keep open loops visible.",
+      "status": "active"
+    },
+    {
+      "id": "release-checklist-v1",
+      "title": "Release Checklist v1",
+      "summary": "Stability checks for interaction and route-space transitions.",
+      "tags": [
+        "qa",
+        "doc",
+        "pm"
+      ],
+      "createdAt": "2026-02-16T07:45:00.000Z",
+      "updatedAt": "2026-02-21T09:45:00.000Z",
+      "body": "Verify prompt visibility and E interaction in all spaces.\nConfirm build and dev commands before merging.\nTrack regression notes per route.",
+      "status": "active"
+    },
+    {
+      "id": "search-facet-decisions",
+      "title": "Search Facet Decisions",
+      "summary": "Why client fulltext plus facet filters is enough for v1.",
+      "tags": [
+        "search",
+        "architecture",
+        "ux"
+      ],
+      "categoryHint": "engineering",
+      "createdAt": "2026-02-15T06:10:00.000Z",
+      "updatedAt": "2026-02-23T12:30:00.000Z",
+      "body": "Token search by title, summary, tags, and body supports most retrieval tasks.\nFacet by category reduces mismatch and improves discoverability.\nSemantic search can be introduced when corpus size grows.",
+      "status": "active"
+    },
+    {
+      "id": "visual-reference-audit",
+      "title": "Visual Reference Audit for Library Space",
+      "summary": "Color and structure notes inspired by industrial libraries.",
+      "tags": [
+        "visual",
+        "ui",
+        "layout"
+      ],
+      "categoryHint": "design",
+      "createdAt": "2026-02-14T05:10:00.000Z",
+      "updatedAt": "2026-02-24T10:25:00.000Z",
+      "body": "Use steel blue and graphite tones for calm high-density spaces.\nMaintain a clear center aisle and rhythm with repeated bays.\nPlace bright accents only on interactable targets.",
+      "status": "active"
+    }
+  ],
+  "categorizationResults": {
+    "agent-feedback-loop": {
+      "primaryCategoryId": "ai",
+      "secondaryCategoryIds": [],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    },
+    "content-taxonomy-seed": {
+      "primaryCategoryId": "product",
+      "secondaryCategoryIds": [
+        "ai"
+      ],
+      "confidence": 0.9,
+      "reasons": [
+        "tag alias hits: 3",
+        "keyword hits: 1"
+      ]
+    },
+    "engine-room-layout": {
+      "primaryCategoryId": "engineering",
+      "secondaryCategoryIds": [
+        "design"
+      ],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    },
+    "library-navigation-copy": {
+      "primaryCategoryId": "writing",
+      "secondaryCategoryIds": [
+        "design"
+      ],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    },
+    "notes-raw-dump": {
+      "primaryCategoryId": "uncategorized",
+      "secondaryCategoryIds": [],
+      "confidence": 0.05,
+      "reasons": [
+        "fallback to uncategorized"
+      ]
+    },
+    "personal-weekly-review": {
+      "primaryCategoryId": "personal",
+      "secondaryCategoryIds": [],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    },
+    "release-checklist-v1": {
+      "primaryCategoryId": "product",
+      "secondaryCategoryIds": [
+        "writing",
+        "design",
+        "ai"
+      ],
+      "confidence": 0.28,
+      "reasons": [
+        "tag alias hits: 1"
+      ]
+    },
+    "search-facet-decisions": {
+      "primaryCategoryId": "engineering",
+      "secondaryCategoryIds": [
+        "design",
+        "ai",
+        "writing"
+      ],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    },
+    "visual-reference-audit": {
+      "primaryCategoryId": "design",
+      "secondaryCategoryIds": [],
+      "confidence": 1,
+      "reasons": [
+        "categoryHint exact match"
+      ]
+    }
+  },
+  "docByCategory": {
+    "engineering": [
+      "engine-room-layout",
+      "search-facet-decisions"
+    ],
+    "ai": [
+      "agent-feedback-loop"
+    ],
+    "product": [
+      "content-taxonomy-seed",
+      "release-checklist-v1"
+    ],
+    "design": [
+      "visual-reference-audit"
+    ],
+    "writing": [
+      "library-navigation-copy"
+    ],
+    "personal": [
+      "personal-weekly-review"
+    ],
+    "uncategorized": [
+      "notes-raw-dump"
+    ]
+  },
+  "recentChanges": [
+    {
+      "docId": "engine-room-layout",
+      "title": "Engine Room Layout Principles",
+      "categoryId": "engineering",
+      "updatedAt": "2026-02-28T12:10:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "agent-feedback-loop",
+      "title": "Agent Feedback Loop for Knowledge Classification",
+      "categoryId": "ai",
+      "updatedAt": "2026-02-27T18:04:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "content-taxonomy-seed",
+      "title": "Content Taxonomy Seed",
+      "categoryId": "product",
+      "updatedAt": "2026-02-26T11:20:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "library-navigation-copy",
+      "title": "Library Navigation Copy Draft",
+      "categoryId": "writing",
+      "updatedAt": "2026-02-25T07:40:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "visual-reference-audit",
+      "title": "Visual Reference Audit for Library Space",
+      "categoryId": "design",
+      "updatedAt": "2026-02-24T10:25:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "search-facet-decisions",
+      "title": "Search Facet Decisions",
+      "categoryId": "engineering",
+      "updatedAt": "2026-02-23T12:30:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "personal-weekly-review",
+      "title": "Weekly Review Template",
+      "categoryId": "personal",
+      "updatedAt": "2026-02-22T21:00:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "release-checklist-v1",
+      "title": "Release Checklist v1",
+      "categoryId": "product",
+      "updatedAt": "2026-02-21T09:45:00.000Z",
+      "status": "active"
+    },
+    {
+      "docId": "notes-raw-dump",
+      "title": "Raw Dump: Misc Notes",
+      "categoryId": "uncategorized",
+      "updatedAt": "2026-02-20T06:15:00.000Z",
+      "status": "active"
+    }
+  ],
+  "layout": {
+    "settings": {
+      "baseLength": 2,
+      "bayLength": 1,
+      "docsPerBay": 12,
+      "maxVisibleBaysPerLane": 9,
+      "laneGapX": 4.2,
+      "laneBaseX": 9.5,
+      "laneStartZ": 8,
+      "laneBaySpacingZ": 6
+    },
+    "lanes": [
+      {
+        "id": "lane.engineering",
+        "categoryId": "engineering",
+        "label": "Engineering",
+        "side": "left",
+        "x": -9.5,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 2,
+        "compressedDocCount": 0,
+        "docIds": [
+          "engine-room-layout",
+          "search-facet-decisions"
+        ]
+      },
+      {
+        "id": "lane.ai",
+        "categoryId": "ai",
+        "label": "AI",
+        "side": "right",
+        "x": 9.5,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 1,
+        "compressedDocCount": 0,
+        "docIds": [
+          "agent-feedback-loop"
+        ]
+      },
+      {
+        "id": "lane.product",
+        "categoryId": "product",
+        "label": "Product",
+        "side": "left",
+        "x": -13.7,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 2,
+        "compressedDocCount": 0,
+        "docIds": [
+          "content-taxonomy-seed",
+          "release-checklist-v1"
+        ]
+      },
+      {
+        "id": "lane.design",
+        "categoryId": "design",
+        "label": "Design",
+        "side": "right",
+        "x": 13.7,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 1,
+        "compressedDocCount": 0,
+        "docIds": [
+          "visual-reference-audit"
+        ]
+      },
+      {
+        "id": "lane.writing",
+        "categoryId": "writing",
+        "label": "Writing",
+        "side": "left",
+        "x": -17.9,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 1,
+        "compressedDocCount": 0,
+        "docIds": [
+          "library-navigation-copy"
+        ]
+      },
+      {
+        "id": "lane.personal",
+        "categoryId": "personal",
+        "label": "Personal",
+        "side": "right",
+        "x": 17.9,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 1,
+        "compressedDocCount": 0,
+        "docIds": [
+          "personal-weekly-review"
+        ]
+      },
+      {
+        "id": "lane.uncategorized",
+        "categoryId": "uncategorized",
+        "label": "Uncategorized",
+        "side": "left",
+        "x": -22.1,
+        "zStart": 8,
+        "bayCount": 3,
+        "visibleBayCount": 3,
+        "docCount": 1,
+        "compressedDocCount": 0,
+        "docIds": [
+          "notes-raw-dump"
+        ]
+      }
+    ],
+    "docAnchors": [
+      {
+        "id": "anchor.engineering.engine-room-layout",
+        "docId": "engine-room-layout",
+        "categoryId": "engineering",
+        "position": [
+          -8.05,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.engineering.search-facet-decisions",
+        "docId": "search-facet-decisions",
+        "categoryId": "engineering",
+        "position": [
+          -8.05,
+          1.4,
+          7.499999999999999
+        ]
+      },
+      {
+        "id": "anchor.ai.agent-feedback-loop",
+        "docId": "agent-feedback-loop",
+        "categoryId": "ai",
+        "position": [
+          8.05,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.product.content-taxonomy-seed",
+        "docId": "content-taxonomy-seed",
+        "categoryId": "product",
+        "position": [
+          -12.25,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.product.release-checklist-v1",
+        "docId": "release-checklist-v1",
+        "categoryId": "product",
+        "position": [
+          -12.25,
+          1.4,
+          7.499999999999999
+        ]
+      },
+      {
+        "id": "anchor.design.visual-reference-audit",
+        "docId": "visual-reference-audit",
+        "categoryId": "design",
+        "position": [
+          12.25,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.writing.library-navigation-copy",
+        "docId": "library-navigation-copy",
+        "categoryId": "writing",
+        "position": [
+          -16.45,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.personal.personal-weekly-review",
+        "docId": "personal-weekly-review",
+        "categoryId": "personal",
+        "position": [
+          16.45,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "anchor.uncategorized.notes-raw-dump",
+        "docId": "notes-raw-dump",
+        "categoryId": "uncategorized",
+        "position": [
+          -20.650000000000002,
+          1.4,
+          8.7
+        ]
+      }
+    ],
+    "interactables": [
+      {
+        "id": "library.librarianDesk",
+        "kind": "librarian",
+        "label": "Librarian Console",
+        "position": [
+          0,
+          1.2,
+          12.6
+        ]
+      },
+      {
+        "id": "library.category.engineering",
+        "kind": "category",
+        "label": "Category: Engineering",
+        "targetId": "engineering",
+        "position": [
+          -7.8,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.ai",
+        "kind": "category",
+        "label": "Category: AI",
+        "targetId": "ai",
+        "position": [
+          7.8,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.product",
+        "kind": "category",
+        "label": "Category: Product",
+        "targetId": "product",
+        "position": [
+          -12,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.design",
+        "kind": "category",
+        "label": "Category: Design",
+        "targetId": "design",
+        "position": [
+          12,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.writing",
+        "kind": "category",
+        "label": "Category: Writing",
+        "targetId": "writing",
+        "position": [
+          -16.2,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.personal",
+        "kind": "category",
+        "label": "Category: Personal",
+        "targetId": "personal",
+        "position": [
+          16.2,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.category.uncategorized",
+        "kind": "category",
+        "label": "Category: Uncategorized",
+        "targetId": "uncategorized",
+        "position": [
+          -20.400000000000002,
+          2.15,
+          9.5
+        ]
+      },
+      {
+        "id": "library.doc.engine-room-layout",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "engine-room-layout",
+        "position": [
+          -8.05,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.search-facet-decisions",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "search-facet-decisions",
+        "position": [
+          -8.05,
+          1.4,
+          7.499999999999999
+        ]
+      },
+      {
+        "id": "library.doc.agent-feedback-loop",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "agent-feedback-loop",
+        "position": [
+          8.05,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.content-taxonomy-seed",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "content-taxonomy-seed",
+        "position": [
+          -12.25,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.release-checklist-v1",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "release-checklist-v1",
+        "position": [
+          -12.25,
+          1.4,
+          7.499999999999999
+        ]
+      },
+      {
+        "id": "library.doc.visual-reference-audit",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "visual-reference-audit",
+        "position": [
+          12.25,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.library-navigation-copy",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "library-navigation-copy",
+        "position": [
+          -16.45,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.personal-weekly-review",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "personal-weekly-review",
+        "position": [
+          16.45,
+          1.4,
+          8.7
+        ]
+      },
+      {
+        "id": "library.doc.notes-raw-dump",
+        "kind": "doc",
+        "label": "Open note",
+        "targetId": "notes-raw-dump",
+        "position": [
+          -20.650000000000002,
+          1.4,
+          8.7
+        ]
+      }
+    ]
+  }
+}

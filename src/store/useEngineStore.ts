@@ -34,6 +34,8 @@ interface EngineStore {
   setChatOpen: (open: boolean) => void
   audioMuted: boolean
   setAudioMuted: (muted: boolean) => void
+  knowledgeHudOpen: boolean
+  setKnowledgeHudOpen: (open: boolean) => void
 }
 
 export const useEngineStore = create<EngineStore>((set, get) => ({
@@ -43,6 +45,7 @@ export const useEngineStore = create<EngineStore>((set, get) => ({
       spaceId,
       focusedId: null,
       interactables: new Map(),
+      knowledgeHudOpen: false,
     }),
   focusedId: null,
   setFocusedId: (id) => set({ focusedId: id }),
@@ -104,4 +107,6 @@ export const useEngineStore = create<EngineStore>((set, get) => ({
   setChatOpen: (open) => set({ chatOpen: open }),
   audioMuted: false,
   setAudioMuted: (muted) => set({ audioMuted: muted }),
+  knowledgeHudOpen: false,
+  setKnowledgeHudOpen: (open) => set({ knowledgeHudOpen: open }),
 }))

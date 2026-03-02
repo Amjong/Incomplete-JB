@@ -26,6 +26,7 @@ export function InteractionSystem() {
   const interactables = useEngineStore((state) => state.interactables)
   const focusedId = useEngineStore((state) => state.focusedId)
   const transitionPhase = useEngineStore((state) => state.transition.phase)
+  const knowledgeHudOpen = useEngineStore((state) => state.knowledgeHudOpen)
   const setFocusedId = useEngineStore((state) => state.setFocusedId)
   const interact = useEngineStore((state) => state.interact)
 
@@ -33,7 +34,7 @@ export function InteractionSystem() {
   const screenCenter = useMemo(() => new Vector2(0, 0), [])
 
   useFrame(() => {
-    if (transitionPhase !== 'idle') {
+    if (transitionPhase !== 'idle' || knowledgeHudOpen) {
       if (focusedId !== null) {
         setFocusedId(null)
       }
@@ -71,7 +72,7 @@ export function InteractionSystem() {
         return
       }
 
-      if (transitionPhase !== 'idle') {
+      if (transitionPhase !== 'idle' || knowledgeHudOpen) {
         return
       }
 
@@ -83,7 +84,7 @@ export function InteractionSystem() {
     return () => {
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [interact, transitionPhase])
+  }, [interact, knowledgeHudOpen, transitionPhase])
 
   useEffect(() => {
     return () => {

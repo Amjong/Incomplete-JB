@@ -4,8 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build:knowledge-index": "node scripts/build-knowledge-index.mjs",
+    "predev": "pnpm run build:knowledge-index",
+    "prebuild": "pnpm run build:knowledge-index",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "gen:library-modules": "node scripts/generate_library_modules_node.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
