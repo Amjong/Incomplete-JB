@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react'
 import type { WorldProfile } from '../world/WorldProfile'
 
-export type SpaceId = 'room' | 'library' | 'cosmos'
+export type SpaceId = 'room' | 'library' | 'cosmos' | 'gallery'
 
-export type SpacePath = '/' | '/library' | '/cosmos'
+export type SpacePath = '/' | '/library' | '/cosmos' | '/gallery'
 
 export interface SpaceSceneProps {
   navigate: (path: SpacePath) => void

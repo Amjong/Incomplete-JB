@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "seed-image-1",
+      "title": "Morning Fog Corridor",
+      "description": "Soft cold tone photograph used as entrance anchor.",
+      "createdAt": "2026-03-01T08:00:00.000Z",
+      "updatedAt": "2026-03-01T08:00:00.000Z",
+      "media": {
+        "kind": "image",
+        "sourceType": "url",
+        "src": "https://picsum.photos/id/1039/1600/900",
+        "naturalWidth": 1600,
+        "naturalHeight": 900
+      }
+    },
+    {
+      "id": "seed-image-2",
+      "title": "Vertical Concrete Light",
+      "description": "Tall portrait composition to test aspect ratio on wall.",
+      "createdAt": "2026-03-01T08:02:00.000Z",
+      "updatedAt": "2026-03-01T08:02:00.000Z",
+      "media": {
+        "kind": "image",
+        "sourceType": "url",
+        "src": "https://picsum.photos/id/1011/900/1400",
+        "naturalWidth": 900,
+        "naturalHeight": 1400
+      }
+    },
+    {
+      "id": "seed-image-3",
+      "title": "Steel Blue Horizon",
+      "description": "Wide format sample for panoramic behavior.",
+      "createdAt": "2026-03-01T08:04:00.000Z",
+      "updatedAt": "2026-03-01T08:04:00.000Z",
+      "media": {
+        "kind": "image",
+        "sourceType": "url",
+        "src": "https://picsum.photos/id/1040/2100/900",
+        "naturalWidth": 2100,
+        "naturalHeight": 900
+      }
+    },
+    {
+      "id": "seed-video-1",
+      "title": "Gallery Mood Video",
+      "description": "A cinematic reference clip displayed as a YouTube exhibit.",
+      "createdAt": "2026-03-01T08:06:00.000Z",
+      "updatedAt": "2026-03-01T08:06:00.000Z",
+      "media": {
+        "kind": "youtube",
+        "url": "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+        "youtubeId": "ScMzIvxBSi4",
+        "thumbUrl": "https://img.youtube.com/vi/ScMzIvxBSi4/hqdefault.jpg",
+        "width": 1.6,
+        "height": 0.9
+      }
+    },
+    {
+      "id": "seed-image-4",
+      "title": "Marble Hall Frame",
+      "description": "Neutral grayscale frame for lighting checks.",
+      "createdAt": "2026-03-01T08:08:00.000Z",
+      "updatedAt": "2026-03-01T08:08:00.000Z",
+      "media": {
+        "kind": "image",
+        "sourceType": "url",
+        "src": "https://picsum.photos/id/1025/1300/920",
+        "naturalWidth": 1300,
+        "naturalHeight": 920
+      }
+    },
+    {
+      "id": "seed-video-2",
+      "title": "Exhibit Walkthrough",
+      "description": "Reference walkthrough video in the rear section.",
+      "createdAt": "2026-03-01T08:10:00.000Z",
+      "updatedAt": "2026-03-01T08:10:00.000Z",
+      "media": {
+        "kind": "youtube",
+        "url": "https://youtu.be/aqz-KE-bpKQ",
+        "youtubeId": "aqz-KE-bpKQ",
+        "thumbUrl": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        "width": 1.6,
+        "height": 0.9
+      }
+    }
+  ]
+}

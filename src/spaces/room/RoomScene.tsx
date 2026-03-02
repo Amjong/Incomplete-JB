@@ -33,6 +33,7 @@ export function RoomScene({ navigate, openChat }: SpaceSceneProps) {
         <CuboidCollider args={[0.95, 1.45, 0.45]} position={[-2.8, 1.45, 1.2]} />
         <CuboidCollider args={[0.7, 0.4, 0.55]} position={[0.8, 0.45, 2.2]} />
         <CuboidCollider args={[0.45, 0.95, 0.45]} position={[2.8, 1.1, 1.6]} />
+        <CuboidCollider args={[0.55, 1.15, 0.4]} position={[-0.8, 1.2, 1.8]} />
       </RigidBody>
 
       <Interactable id="room.bookshelf" label="Bookshelf" onInteract={() => navigate('/library')} position={[-2.8, 1.4, 1.2]}>
@@ -58,6 +59,13 @@ export function RoomScene({ navigate, openChat }: SpaceSceneProps) {
         <mesh castShadow>
           <capsuleGeometry args={[0.5, 1.2, 4, 12]} />
           <meshStandardMaterial color="#7ec4ff" emissive="#12384f" emissiveIntensity={0.4} />
+        </mesh>
+      </Interactable>
+
+      <Interactable id="room.gallery" label="Gallery Portal" onInteract={() => navigate('/gallery')} position={[-0.8, 1.2, 1.8]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.52, 0.52, 2.3, 24]} />
+          <meshStandardMaterial color="#d8e3ef" emissive="#5d7896" emissiveIntensity={0.28} />
         </mesh>
       </Interactable>
 

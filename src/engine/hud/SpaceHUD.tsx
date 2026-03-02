@@ -1,6 +1,7 @@
 import { useEngineStore } from '../../store/useEngineStore'
 import { spaceRegistry } from '../spaces/registry'
 import { LibraryKnowledgePanels } from '../../spaces/library/knowledge/LibraryKnowledgePanels'
+import { GalleryPanels } from '../../spaces/gallery/ui/GalleryPanels'
 
 export function SpaceHUD() {
   const spaceId = useEngineStore((state) => state.spaceId)
@@ -24,7 +25,7 @@ export function SpaceHUD() {
         </div>
       ) : null}
 
-      <div className="hud-tips">Click to lock pointer. Mouse look. WASD move. K or Tab opens Knowledge panel in Library.</div>
+      <div className="hud-tips">Click to lock pointer. Mouse look. WASD move. K or Tab opens panel in Library/Gallery.</div>
       <div className="space-label">Incomplete JB — Space: {spaceRegistry[spaceId].title}</div>
       <button
         className="sound-toggle"
@@ -45,6 +46,7 @@ export function SpaceHUD() {
       ) : null}
 
       <LibraryKnowledgePanels />
+      <GalleryPanels />
     </div>
   )
 }

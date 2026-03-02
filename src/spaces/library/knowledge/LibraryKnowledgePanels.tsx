@@ -24,7 +24,7 @@ function TabButton({
 
 export function LibraryKnowledgePanels() {
   const spaceId = useEngineStore((state) => state.spaceId)
-  const setKnowledgeHudOpen = useEngineStore((state) => state.setKnowledgeHudOpen)
+  const setOverlayHudOpen = useEngineStore((state) => state.setOverlayHudOpen)
 
   const panelOpen = useKnowledgeStore((state) => state.panelOpen)
   const activeTab = useKnowledgeStore((state) => state.activeTab)
@@ -49,8 +49,8 @@ export function LibraryKnowledgePanels() {
   }, [setPanelOpen, spaceId])
 
   useEffect(() => {
-    setKnowledgeHudOpen(spaceId === 'library' && panelOpen)
-  }, [panelOpen, setKnowledgeHudOpen, spaceId])
+    setOverlayHudOpen(spaceId === 'library' && panelOpen)
+  }, [panelOpen, setOverlayHudOpen, spaceId])
 
   useEffect(() => {
     if (spaceId !== 'library') {
