@@ -1031,6 +1031,27 @@ canvas {
   background: rgba(22, 27, 34, 0.84);
 }
 
+.library-workspace-auth-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.library-workspace-auth-submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.library-workspace-auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.library-workspace-auth-error {
+  margin: 0;
+  color: #f1c5c5;
+}
+
 .library-workspace {
   --workspace-bg: #0f1317;
   --workspace-panel: #171c22;
@@ -1642,6 +1663,14 @@ canvas {
   color: #96b8d9;
 }
 
+.library-workspace-inline-code {
+  padding: 0.08rem 0.32rem;
+  border-radius: 0.35rem;
+  background: rgba(214, 223, 229, 0.12);
+  color: #f0ddbb;
+  font-size: 0.92em;
+}
+
 .library-workspace-inline-link.is-block {
   color: #cfccf1;
 }
@@ -1662,6 +1691,26 @@ canvas {
 
 .library-workspace-hybrid-block p {
   line-height: 1.6;
+}
+
+.library-workspace-hybrid-block strong,
+.library-workspace-embed-card strong,
+.library-workspace-linked-reference-item strong {
+  font-weight: 800;
+  color: #f7fbf1;
+}
+
+.library-workspace-hybrid-block em,
+.library-workspace-embed-card em,
+.library-workspace-linked-reference-item em {
+  font-style: italic;
+  color: #dfe6d4;
+}
+
+.library-workspace-hybrid-block del,
+.library-workspace-embed-card del,
+.library-workspace-linked-reference-item del {
+  opacity: 0.78;
 }
 
 .library-workspace-hybrid-block pre {
@@ -1688,6 +1737,16 @@ canvas {
 
 .library-workspace-hybrid-block h3 {
   font-size: 1.15rem;
+}
+
+.library-workspace-block-row.is-heading {
+  align-items: baseline;
+}
+
+.library-workspace-block-row.is-heading h1,
+.library-workspace-block-row.is-heading h2,
+.library-workspace-block-row.is-heading h3 {
+  margin: 0;
 }
 
 .library-workspace-property-editor {

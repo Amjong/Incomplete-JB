@@ -1,10 +1,12 @@
-import { startTransition, useDeferredValue, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { KnowledgeIndex } from '../../../knowledge/types'
 import { slugifyWorkspaceTitle, useLibraryWorkspaceStore, type WorkspaceDocument } from '../../../store/useLibraryWorkspaceStore'
 
 interface LibraryWorkspaceShellProps {
   index: KnowledgeIndex
   onClose: () => void
+  onSignOut?: () => void
+  remoteSyncError?: string | null
 }
 
 interface PropertyEntry {
@@ -481,7 +483,21 @@ function groupBlocksByDoc(blocks: ParsedBlock[]) {
   return [...map.entries()]
 }
 
-function renderBlockPreview(block: ParsedBlock) {
+function renderBlockPreview(
+  block: ParsedBlock,
+  options?: {
+    graph?: WorkspaceGraph
+    onSelectDoc?: (docId: string) => void
+    onSelectBlock?: (blockId: string) => void
+  },
+) {
+  const graph = options?.graph
+  const onSelectDoc = options?.onSelectDoc ?? (() => {})
+  const onSelectBlock = options?.onSelectBlock ?? (() => {})
+  const renderInline = (text: string) =>
+    graph ? <InlineText graph={graph} onSelectBlock={onSelectBlock} onSelectDoc={onSelectDoc} text={text} /> : text
+  const bulletHeading = block.kind === 'bullet' ? block.content.match(/^(#{1,4})\s+(.+)$/) : null
+
   if (block.kind === 'code') {
     const lines = block.raw.split('\n')
     const codeBody =
@@ -503,26 +519,38 @@ function renderBlockPreview(block: ParsedBlock) {
     const value = heading?.[2] ?? block.content
 
     if (depth === 1) {
-      return <h1 style={style}>{value}</h1>
+      return <h1 style={style}>{renderInline(value)}</h1>
     }
 
     if (depth === 2) {
-      return <h2 style={style}>{value}</h2>
+      return <h2 style={style}>{renderInline(value)}</h2>
     }
 
-    return <h3 style={style}>{value}</h3>
+    return <h3 style={style}>{renderInline(value)}</h3>
   }
 
   if (block.kind === 'bullet') {
+    if (bulletHeading) {
+      const depth = bulletHeading[1].length
+      const value = bulletHeading[2]
+
+      return (
+        <div className="library-workspace-block-row is-heading" style={style}>
+          <span className="library-workspace-block-bullet" />
+          {depth === 1 ? <h1>{renderInline(value)}</h1> : depth === 2 ? <h2>{renderInline(value)}</h2> : <h3>{renderInline(value)}</h3>}
+        </div>
+      )
+    }
+
     return (
       <div className="library-workspace-block-row" style={style}>
         <span className="library-workspace-block-bullet" />
-        <p>{block.content}</p>
+        <p>{renderInline(block.content)}</p>
       </div>
     )
   }
 
-  return <p style={style}>{block.content}</p>
+  return <p style={style}>{renderInline(block.content)}</p>
 }
 
 function InlineText({
@@ -536,79 +564,113 @@ function InlineText({
   onSelectDoc: (docId: string) => void
   onSelectBlock: (blockId: string) => void
 }) {
-  const nodes: ReactNode[] = []
-  const pattern = /(\[\[[^\]]+\]\]|\(\([^)]+\)\)|#[\w-]+)/g
-  let lastIndex = 0
+  const renderTokens = (source: string, keyPrefix: string): ReactNode[] => {
+    const nodes: ReactNode[] = []
+    const pattern = /(\[\[[^\]]+\]\]|\(\([^)]+\)\)|#[\w-]+|`[^`]+`|\*\*[^*]+\*\*|~~[^~]+~~|\*[^*]+\*|_[^_]+_)/g
+    let lastIndex = 0
 
-  for (const match of text.matchAll(pattern)) {
-    const value = match[0]
-    const start = match.index ?? 0
+    for (const match of source.matchAll(pattern)) {
+      const value = match[0]
+      const start = match.index ?? 0
 
-    if (start > lastIndex) {
-      nodes.push(text.slice(lastIndex, start))
+      if (start > lastIndex) {
+        nodes.push(source.slice(lastIndex, start))
+      }
+
+      if (value.startsWith('[[')) {
+        const pageTitle = value.slice(2, -2).trim()
+        const targetDoc = graph.docByKey.get(slugifyWorkspaceTitle(pageTitle))
+
+        nodes.push(
+          <button
+            className={targetDoc ? 'library-workspace-inline-link' : 'library-workspace-inline-link is-missing'}
+            key={`${keyPrefix}-${start}-page`}
+            onClick={() => {
+              if (targetDoc) {
+                onSelectDoc(targetDoc.doc.id)
+              }
+            }}
+            title={targetDoc ? targetDoc.excerpt : 'Missing page'}
+            type="button"
+          >
+            {value}
+          </button>,
+        )
+      } else if (value.startsWith('((')) {
+        const blockId = value.slice(2, -2).trim()
+        const targetBlock = graph.blockById.get(blockId)
+
+        nodes.push(
+          <button
+            className={targetBlock ? 'library-workspace-inline-link is-block' : 'library-workspace-inline-link is-missing'}
+            key={`${keyPrefix}-${start}-block`}
+            onClick={() => {
+              if (targetBlock) {
+                onSelectDoc(targetBlock.docId)
+                onSelectBlock(targetBlock.blockId)
+              }
+            }}
+            title={targetBlock ? `${targetBlock.docTitle}: ${targetBlock.content}` : 'Missing block'}
+            type="button"
+          >
+            {value}
+          </button>,
+        )
+      } else if (value.startsWith('#')) {
+        nodes.push(
+          <span className="library-workspace-inline-tag" key={`${keyPrefix}-${start}-tag`}>
+            {value}
+          </span>,
+        )
+      } else if (value.startsWith('`') && value.endsWith('`')) {
+        nodes.push(
+          <code className="library-workspace-inline-code" key={`${keyPrefix}-${start}-code`}>
+            {value.slice(1, -1)}
+          </code>,
+        )
+      } else if (value.startsWith('**') && value.endsWith('**')) {
+        nodes.push(
+          <strong key={`${keyPrefix}-${start}-strong`}>{renderTokens(value.slice(2, -2), `${keyPrefix}-${start}-strong`)}</strong>,
+        )
+      } else if (value.startsWith('~~') && value.endsWith('~~')) {
+        nodes.push(
+          <del key={`${keyPrefix}-${start}-del`}>{renderTokens(value.slice(2, -2), `${keyPrefix}-${start}-del`)}</del>,
+        )
+      } else if (
+        (value.startsWith('*') && value.endsWith('*')) ||
+        (value.startsWith('_') && value.endsWith('_'))
+      ) {
+        nodes.push(
+          <em key={`${keyPrefix}-${start}-em`}>{renderTokens(value.slice(1, -1), `${keyPrefix}-${start}-em`)}</em>,
+        )
+      } else {
+        nodes.push(value)
+      }
+
+      lastIndex = start + value.length
     }
 
-    if (value.startsWith('[[')) {
-      const pageTitle = value.slice(2, -2).trim()
-      const targetDoc = graph.docByKey.get(slugifyWorkspaceTitle(pageTitle))
-
-      nodes.push(
-        <button
-          className={targetDoc ? 'library-workspace-inline-link' : 'library-workspace-inline-link is-missing'}
-          key={`${value}-${start}`}
-          onClick={() => {
-            if (targetDoc) {
-              onSelectDoc(targetDoc.doc.id)
-            }
-          }}
-          title={targetDoc ? targetDoc.excerpt : 'Missing page'}
-          type="button"
-        >
-          {value}
-        </button>,
-      )
-    } else if (value.startsWith('((')) {
-      const blockId = value.slice(2, -2).trim()
-      const targetBlock = graph.blockById.get(blockId)
-
-      nodes.push(
-        <button
-          className={targetBlock ? 'library-workspace-inline-link is-block' : 'library-workspace-inline-link is-missing'}
-          key={`${value}-${start}`}
-          onClick={() => {
-            if (targetBlock) {
-              onSelectDoc(targetBlock.docId)
-              onSelectBlock(targetBlock.blockId)
-            }
-          }}
-          title={targetBlock ? `${targetBlock.docTitle}: ${targetBlock.content}` : 'Missing block'}
-          type="button"
-        >
-          {value}
-        </button>,
-      )
-    } else {
-      nodes.push(
-        <span className="library-workspace-inline-tag" key={`${value}-${start}`}>
-          {value}
-        </span>,
-      )
+    if (lastIndex < source.length) {
+      nodes.push(source.slice(lastIndex))
     }
 
-    lastIndex = start + value.length
+    return nodes
   }
 
-  if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex))
-  }
-
+  const nodes = renderTokens(text, 'inline')
   return <>{nodes.length > 0 ? nodes : text}</>
 }
 
 function BlockEmbedCard({
   targetBlock,
+  graph,
+  onSelectDoc,
+  onSelectBlock,
 }: {
   targetBlock: ParsedBlock | null
+  graph: WorkspaceGraph
+  onSelectDoc: (docId: string) => void
+  onSelectBlock: (blockId: string) => void
 }) {
   if (!targetBlock) {
     return <div className="library-workspace-embed-card is-missing">Missing block embed target.</div>
@@ -620,15 +682,23 @@ function BlockEmbedCard({
         <span>Block Embed</span>
         <small>{targetBlock.docTitle}</small>
       </div>
-      <div className="library-workspace-embed-body">{renderBlockPreview(targetBlock)}</div>
+      <div className="library-workspace-embed-body">
+        {renderBlockPreview(targetBlock, { graph, onSelectBlock, onSelectDoc })}
+      </div>
     </div>
   )
 }
 
 function PageEmbedCard({
   targetDoc,
+  graph,
+  onSelectDoc,
+  onSelectBlock,
 }: {
   targetDoc: ParsedDoc | null
+  graph: WorkspaceGraph
+  onSelectDoc: (docId: string) => void
+  onSelectBlock: (blockId: string) => void
 }) {
   if (!targetDoc) {
     return <div className="library-workspace-embed-card is-missing">Missing page embed target.</div>
@@ -643,7 +713,7 @@ function PageEmbedCard({
       <div className="library-workspace-embed-body">
         {targetDoc.blocks.slice(0, 4).map((block) => (
           <div className="library-workspace-embed-block" key={block.id}>
-            {renderBlockPreview(block)}
+            {renderBlockPreview(block, { graph, onSelectBlock, onSelectDoc })}
           </div>
         ))}
       </div>
@@ -725,13 +795,28 @@ function BlockBody({
   const pageEmbed = parsePageEmbed(block.content)
   const blockEmbed = parseBlockEmbed(block.content)
   const depth = getBlockDepth(effectiveIndent)
+  const bulletHeading = block.kind === 'bullet' ? block.content.match(/^(#{1,4})\s+(.+)$/) : null
 
   let body: ReactNode
 
   if (pageEmbed) {
-    body = <PageEmbedCard targetDoc={graph.docByKey.get(slugifyWorkspaceTitle(pageEmbed)) ?? null} />
+    body = (
+      <PageEmbedCard
+        graph={graph}
+        onSelectBlock={onSelectBlock}
+        onSelectDoc={onSelectDoc}
+        targetDoc={graph.docByKey.get(slugifyWorkspaceTitle(pageEmbed)) ?? null}
+      />
+    )
   } else if (blockEmbed) {
-    body = <BlockEmbedCard targetBlock={graph.blockById.get(blockEmbed) ?? null} />
+    body = (
+      <BlockEmbedCard
+        graph={graph}
+        onSelectBlock={onSelectBlock}
+        onSelectDoc={onSelectDoc}
+        targetBlock={graph.blockById.get(blockEmbed) ?? null}
+      />
+    )
   } else if (block.kind === 'code') {
     const lines = block.raw.split('\n')
     const codeBody =
@@ -746,6 +831,29 @@ function BlockBody({
     const heading = block.line.trimStart().match(/^(#{1,4})\s+(.+)$/)
     const headingDepth = heading?.[1].length ?? 1
     const value = heading?.[2] ?? block.content
+
+    if (headingDepth === 1) {
+      body = (
+        <h1>
+          <InlineText graph={graph} onSelectBlock={onSelectBlock} onSelectDoc={onSelectDoc} text={value} />
+        </h1>
+      )
+    } else if (headingDepth === 2) {
+      body = (
+        <h2>
+          <InlineText graph={graph} onSelectBlock={onSelectBlock} onSelectDoc={onSelectDoc} text={value} />
+        </h2>
+      )
+    } else {
+      body = (
+        <h3>
+          <InlineText graph={graph} onSelectBlock={onSelectBlock} onSelectDoc={onSelectDoc} text={value} />
+        </h3>
+      )
+    }
+  } else if (bulletHeading) {
+    const headingDepth = bulletHeading[1].length
+    const value = bulletHeading[2]
 
     if (headingDepth === 1) {
       body = (
@@ -908,6 +1016,8 @@ function HybridBodyLayer({
   const [expandedBacklinks, setExpandedBacklinks] = useState<Record<string, boolean>>({})
   const [collapsedBlocks, setCollapsedBlocks] = useState<Record<string, boolean>>({})
   const [pendingFocusOrder, setPendingFocusOrder] = useState<number | null>(null)
+  const skipNextBlurCommitRef = useRef(false)
+  const isComposingRef = useRef(false)
 
   useEffect(() => {
     setActiveBlockId(null)
@@ -987,6 +1097,13 @@ function HybridBodyLayer({
                     <textarea
                       autoFocus
                       className="library-workspace-hybrid-editor"
+                      onCompositionEnd={(event) => {
+                        isComposingRef.current = false
+                        setActiveDraft(event.currentTarget.value)
+                      }}
+                      onCompositionStart={() => {
+                        isComposingRef.current = true
+                      }}
                       onFocus={(event) => {
                         const target = event.currentTarget
                         const position = target.value.length
@@ -994,8 +1111,13 @@ function HybridBodyLayer({
                           target.setSelectionRange(position, position)
                         })
                       }}
-                      onBlur={() => {
-                        const committedRaw = serializeEditedBlock(block, activeDraft)
+                      onBlur={(event) => {
+                        if (skipNextBlurCommitRef.current) {
+                          skipNextBlurCommitRef.current = false
+                          return
+                        }
+
+                        const committedRaw = serializeEditedBlock(block, event.currentTarget.value)
                         updateDocument(parsedDoc.doc.id, {
                           body: replaceBlockInDoc(parsedDoc, block.blockId, committedRaw),
                           blockIds: parsedDoc.blocks.map((entry) => entry.blockId),
@@ -1005,6 +1127,10 @@ function HybridBodyLayer({
                       }}
                       onChange={(event) => setActiveDraft(event.target.value)}
                       onKeyDown={(event) => {
+                        if (isComposingRef.current || event.nativeEvent.isComposing) {
+                          return
+                        }
+
                         if (event.key === 'Tab') {
                           event.preventDefault()
                           const nextBlockDepths = [...parsedDoc.doc.blockDepths]
@@ -1017,12 +1143,14 @@ function HybridBodyLayer({
 
                         if (event.key === 'Backspace') {
                           const textarea = event.currentTarget
+                          const currentValue = textarea.value
                           const isCollapsedSelection = textarea.selectionStart === textarea.selectionEnd
                           const isAtBlockStart = textarea.selectionStart === 0
-                          const isEmptyBlock = activeDraft.trim().length === 0
+                          const isEmptyBlock = currentValue.trim().length === 0
 
                           if (isCollapsedSelection && isAtBlockStart && isEmptyBlock) {
                             event.preventDefault()
+                            skipNextBlurCommitRef.current = true
                             const currentIndex = visibleBlocks.findIndex((entry) => entry.blockId === block.blockId)
                             const previousBlock = currentIndex > 0 ? visibleBlocks[currentIndex - 1] : null
                             const nextBlock = currentIndex >= 0 ? visibleBlocks[currentIndex + 1] ?? null : null
@@ -1072,7 +1200,8 @@ function HybridBodyLayer({
 
                             if (targetBlockOrder !== null && targetBlockOrder !== undefined) {
                               event.preventDefault()
-                              const committedRaw = serializeEditedBlock(block, activeDraft)
+                              skipNextBlurCommitRef.current = true
+                              const committedRaw = serializeEditedBlock(block, textarea.value)
                               updateDocument(parsedDoc.doc.id, {
                                 body: replaceBlockInDoc(parsedDoc, block.blockId, committedRaw),
                                 blockIds: parsedDoc.blocks.map((entry) => entry.blockId),
@@ -1087,9 +1216,11 @@ function HybridBodyLayer({
 
                         if (event.key === 'Enter' && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
                           event.preventDefault()
+                          skipNextBlurCommitRef.current = true
                           const textarea = event.currentTarget
-                          const headText = activeDraft.slice(0, textarea.selectionStart)
-                          const tailText = activeDraft.slice(textarea.selectionEnd)
+                          const currentValue = textarea.value
+                          const headText = currentValue.slice(0, textarea.selectionStart)
+                          const tailText = currentValue.slice(textarea.selectionEnd)
                           const currentBlockRaw = createSiblingBlockRaw(block, headText)
                           const nextBody = replaceBlockInDoc(parsedDoc, block.blockId, currentBlockRaw)
                           const freshParsedDoc = parseWorkspaceDocument({ ...parsedDoc.doc, body: nextBody })
@@ -1114,6 +1245,7 @@ function HybridBodyLayer({
 
                         if (event.key === 'Escape') {
                           event.preventDefault()
+                          skipNextBlurCommitRef.current = true
                           setActiveBlockId(null)
                           setActiveDraft('')
                         }
@@ -1266,7 +1398,7 @@ function HybridBodyLayer({
                           }}
                           type="button"
                         >
-                          {renderBlockPreview(ref)}
+                          {renderBlockPreview(ref, { graph, onSelectBlock, onSelectDoc })}
                         </button>
                       ))}
                     </div>
@@ -1354,7 +1486,7 @@ function DocumentList({
   )
 }
 
-export function LibraryWorkspaceShell({ index, onClose }: LibraryWorkspaceShellProps) {
+export function LibraryWorkspaceShell({ index, onClose, onSignOut, remoteSyncError }: LibraryWorkspaceShellProps) {
   const docs = useLibraryWorkspaceStore((state) => state.docs)
   const selectedDocId = useLibraryWorkspaceStore((state) => state.selectedDocId)
   const query = useLibraryWorkspaceStore((state) => state.query)
@@ -1454,6 +1586,11 @@ export function LibraryWorkspaceShell({ index, onClose }: LibraryWorkspaceShellP
             <button className="library-workspace-secondary" onClick={createDocument} type="button">
               New Page
             </button>
+            {onSignOut ? (
+              <button className="library-workspace-secondary" onClick={onSignOut} type="button">
+                Sign Out
+              </button>
+            ) : null}
             <button className="library-workspace-primary" onClick={onClose} type="button">
               Return to World
             </button>
@@ -1463,7 +1600,15 @@ export function LibraryWorkspaceShell({ index, onClose }: LibraryWorkspaceShellP
         <div className="library-workspace-status-bar">
           <span>{docs.length} pages loaded</span>
           <span>{"Page refs `[[Page]]`, block refs `((id))`, embeds `{{embed ...}}`, and properties `key:: value` are active."}</span>
-          <span>{saveState === 'saved' && lastSavedAt ? `Saved to session ${formatDate(lastSavedAt)}` : 'Drafting locally'}</span>
+          <span>
+            {saveState === 'saving'
+              ? 'Saving to Supabase...'
+              : saveState === 'saved' && lastSavedAt
+                ? `Saved to Supabase ${formatDate(lastSavedAt)}`
+                : saveState === 'error'
+                  ? remoteSyncError ?? 'Supabase sync failed'
+                  : 'Editing workspace'}
+          </span>
         </div>
 
         <div className="library-workspace-body">
@@ -1501,7 +1646,7 @@ export function LibraryWorkspaceShell({ index, onClose }: LibraryWorkspaceShellP
                   </div>
                   <div className="library-workspace-toolbar-actions">
                     <button className="library-workspace-primary" onClick={() => saveDocument(selectedDoc.id)} type="button">
-                      Save Draft
+                      Sync Now
                     </button>
                   </div>
                 </div>
@@ -1622,7 +1767,7 @@ export function LibraryWorkspaceShell({ index, onClose }: LibraryWorkspaceShellP
                               }}
                               type="button"
                             >
-                              {renderBlockPreview(ref)}
+                              {renderBlockPreview(ref, { graph, onSelectBlock: navigateToBlock, onSelectDoc: navigateToDoc })}
                             </button>
                           ))}
                         </div>

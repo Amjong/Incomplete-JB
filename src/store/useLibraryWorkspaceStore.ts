@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { KnowledgeDoc } from '../knowledge/types'
-export type WorkspaceSaveState = 'idle' | 'saving' | 'saved'
+export type WorkspaceSaveState = 'idle' | 'saving' | 'saved' | 'error'
 
 export interface WorkspaceDocument {
   id: string
@@ -23,13 +23,18 @@ interface WorkspaceStore {
   sidebarOpen: boolean
   saveState: WorkspaceSaveState
   lastSavedAt: string | null
+  saveRequestToken: number
+  requestedSaveDocId: string | null
   hydrateFromKnowledgeDocs: (docs: KnowledgeDoc[], docByCategory: Record<string, string[]>) => void
+  hydrateFromRemoteDocs: (docs: WorkspaceDocument[]) => void
   selectDoc: (docId: string | null) => void
   setQuery: (query: string) => void
   setActiveCategoryId: (categoryId: string | null) => void
   setSidebarOpen: (open: boolean) => void
   createDocument: () => void
   updateDocument: (docId: string, patch: Partial<Pick<WorkspaceDocument, 'title' | 'body' | 'blockDepths' | 'blockIds'>>) => void
+  replaceDocument: (tempId: string, nextDoc: WorkspaceDocument) => void
+  setSaveState: (saveState: WorkspaceSaveState, lastSavedAt?: string | null) => void
   saveDocument: (docId: string) => void
 }
 
@@ -72,6 +77,8 @@ export const useLibraryWorkspaceStore = create<WorkspaceStore>((set) => ({
   sidebarOpen: false,
   saveState: 'idle',
   lastSavedAt: null,
+  saveRequestToken: 0,
+  requestedSaveDocId: null,
 
   hydrateFromKnowledgeDocs: (docs, docByCategory) =>
     set((state) => {
@@ -96,6 +103,18 @@ export const useLibraryWorkspaceStore = create<WorkspaceStore>((set) => ({
       return {
         docs: nextDocs,
         selectedDocId: state.selectedDocId ?? nextDocs[0]?.id ?? null,
+      }
+    }),
+
+  hydrateFromRemoteDocs: (docs) =>
+    set((state) => {
+      const selectedExists = state.selectedDocId ? docs.some((doc) => doc.id === state.selectedDocId) : false
+
+      return {
+        docs,
+        selectedDocId: selectedExists ? state.selectedDocId : docs[0]?.id ?? null,
+        saveState: 'idle',
+        lastSavedAt: null,
       }
     }),
 
@@ -146,6 +165,18 @@ export const useLibraryWorkspaceStore = create<WorkspaceStore>((set) => ({
       saveState: 'idle',
     })),
 
+  replaceDocument: (tempId, nextDoc) =>
+    set((state) => ({
+      docs: state.docs.map((doc) => (doc.id === tempId ? nextDoc : doc)),
+      selectedDocId: state.selectedDocId === tempId ? nextDoc.id : state.selectedDocId,
+    })),
+
+  setSaveState: (saveState, lastSavedAt = null) =>
+    set({
+      saveState,
+      lastSavedAt: saveState === 'saved' ? lastSavedAt ?? new Date().toISOString() : lastSavedAt,
+    }),
+
   saveDocument: (docId) =>
     set((state) => {
       const exists = state.docs.some((doc) => doc.id === docId)
@@ -154,8 +185,8 @@ export const useLibraryWorkspaceStore = create<WorkspaceStore>((set) => ({
       }
 
       return {
-        saveState: 'saved',
-        lastSavedAt: new Date().toISOString(),
+        saveRequestToken: state.saveRequestToken + 1,
+        requestedSaveDocId: docId,
       }
     }),
 }))
