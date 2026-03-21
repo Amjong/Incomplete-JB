@@ -1,8 +1,10 @@
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { useEffect, useMemo } from 'react'
+import { useLibraryViewMode } from '../../../app/useLibraryViewMode'
 import { Interactable } from '../../../engine/interaction/Interactable'
 import { LibraryModule } from '../modules/LibraryModule'
 import { useKnowledgeStore } from '../../../store/useKnowledgeStore'
+import { slugifyWorkspaceTitle, useLibraryWorkspaceStore } from '../../../store/useLibraryWorkspaceStore'
 
 function TowerFallback() {
   return (
@@ -64,9 +66,10 @@ export function LibraryKnowledgeLayer() {
   const index = useKnowledgeStore((state) => state.index)
   const loadState = useKnowledgeStore((state) => state.loadState)
   const ensureLoaded = useKnowledgeStore((state) => state.ensureLoaded)
-  const openLibrarian = useKnowledgeStore((state) => state.openLibrarian)
-  const openCategory = useKnowledgeStore((state) => state.openCategory)
-  const openDoc = useKnowledgeStore((state) => state.openDoc)
+  const { openWorkspace } = useLibraryViewMode()
+  const selectDoc = useLibraryWorkspaceStore((state) => state.selectDoc)
+  const setActiveCategoryId = useLibraryWorkspaceStore((state) => state.setActiveCategoryId)
+  const setSidebarOpen = useLibraryWorkspaceStore((state) => state.setSidebarOpen)
 
   useEffect(() => {
     ensureLoaded()
@@ -74,10 +77,10 @@ export function LibraryKnowledgeLayer() {
 
   const docsById = useMemo(() => {
     if (!index) {
-      return new Map<string, string>()
+      return new Map<string, { title: string; slug: string }>()
     }
 
-    return new Map(index.docs.map((doc) => [doc.id, doc.title]))
+    return new Map(index.docs.map((doc) => [doc.id, { title: doc.title, slug: slugifyWorkspaceTitle(doc.title) }]))
   }, [index])
 
   if (!index || loadState === 'loading' || loadState === 'idle') {
@@ -124,7 +127,11 @@ export function LibraryKnowledgeLayer() {
             id={`library.category.${lane.categoryId}`}
             key={`category-${lane.categoryId}`}
             label={`Open ${lane.label}`}
-            onInteract={() => openCategory(lane.categoryId)}
+            onInteract={() => {
+              setActiveCategoryId(lane.categoryId)
+              setSidebarOpen(true)
+              openWorkspace()
+            }}
             position={markerPosition}
           >
             <CategoryMarkerMesh color={color} />
@@ -136,15 +143,29 @@ export function LibraryKnowledgeLayer() {
         <Interactable
           id={`library.doc.${anchor.docId}`}
           key={anchor.id}
-          label={docsById.get(anchor.docId) ?? 'Open note'}
-          onInteract={() => openDoc(anchor.docId)}
+          label={docsById.get(anchor.docId)?.title ?? 'Open note'}
+          onInteract={() => {
+            const doc = docsById.get(anchor.docId)
+            selectDoc(anchor.docId)
+            setSidebarOpen(false)
+            openWorkspace(doc?.slug ?? null)
+          }}
           position={anchor.position}
         >
           <DocMarkerMesh />
         </Interactable>
       ))}
 
-      <Interactable id="library.librarianDesk" label="Open Librarian" onInteract={openLibrarian} position={[0, 1.2, 12.6]}>
+      <Interactable
+        id="library.librarianDesk"
+        label="Open Workspace"
+        onInteract={() => {
+          setActiveCategoryId(null)
+          setSidebarOpen(true)
+          openWorkspace()
+        }}
+        position={[0, 1.2, 12.6]}
+      >
         <LibrarianDeskMesh />
       </Interactable>
 
